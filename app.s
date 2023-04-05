@@ -52,3 +52,46 @@ map:
     ldr x30, [sp]
     add sp, sp, #8
     br x30
+    
+    /*
+    The draw_chunk2 function draws an 8x8 pixel block in the main FrameBuffer.
+
+    Inputs: (x3, x4) <- initial direction upper left corner
+    w12 <- color
+
+    Uses and does not modify registers x3, x4, x0, x2
+
+    Modifies registers x8 and x9 in addition to using them
+
+    Uses the map function
+*/
+
+draw_chunk:
+    sub sp, sp, #40
+    str x2, [sp, #32]
+    str x3, [sp, #24]
+    str x4, [sp, #16]
+    str x0, [sp, #8]
+    str x30, [sp]
+
+    bl map
+    mov x2, #8
+draw_chunk_loop1:
+    mov x8, #8
+draw_chunk_loop2:
+    str w12, [x0]
+    add x0, x0, #4
+    sub x8, x8, #1
+    cbnz x8, draw_chunk_loop2
+    add x4, x4, 0x1
+    bl map2
+    sub x2, x2, #1
+    cbnz x2, draw_chunk_loop1
+
+    ldr x2, [sp, #32]
+    ldr x3, [sp, #24]
+    ldr x4, [sp, #16]
+    ldr x0, [sp, #8]
+    ldr x30, [sp]
+    add sp, sp, #40
+    br x30
