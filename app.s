@@ -52,3 +52,56 @@ map:
     ldr x30, [sp]
     add sp, sp, #8
     br x30
+
+/*
+    squared_background:
+    
+    This function draws a squared background on the screen with
+    alternating colors. The background consists of squares of 
+    size 8x8 pixels with two different colors.
+    
+    Inputs:
+
+    x0: the memory address where the drawing starts
+    x1: the screen width
+    x2: the screen height
+    
+    Registers usage:
+
+    x8, x10, x11: temporary registers for the function
+    x30: link register
+    sp: stack pointer
+    
+*/
+
+ squared_background:
+    sub sp, sp, #32
+    stur x0, [sp, #24]
+    stur x1, [sp, #16]
+    stur x2, [sp, #8]
+    stur X30,[SP]
+
+    mov x0, x20
+    
+    add x8, x0, #4                    
+    mov x2, SCREEN_HEIGH             
+squared_background_loop1:
+    mov x1, SCREEN_WIDTH         
+squared_background_loop0:
+    stur w10, [x0]           
+    stur w11, [x8]           
+    add x8, x8, 8            
+    add x0, x0, 8            
+    sub x1, x1, 2	         
+    cbnz x1, squared_background_loop0         
+    eor x0, x0, x8
+    eor x8, x0, x8
+    eor x0, x0, x8
+    sub x2, x2, 1  
+    cbnz x2, squared_background_loop1
+
+    ldur x0, [sp, #24]
+    ldur x1, [sp, #16]
+    ldur x2, [sp, #8]
+    ldur x30,[sp]
+    add sp, sp, #32
