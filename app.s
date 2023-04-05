@@ -29,3 +29,26 @@ loop0:
 
 InfLoop: 
 	b InfLoop
+
+/*
+ The map proc stores the memory address of pixel (x, y) in x0.
+
+    Inputs (x3, x4) as coordinates (x, y)
+    Uses and modifies registers x21 and x15
+    Does not modify x3 and x4
+    Output x0 points to pixel (x3, x4) in the main FrameBuffer
+*/
+
+map:
+    sub sp, sp, #8    
+    str x30, [sp]
+
+    mov x21, #4               
+    mov x0, x20               
+    mov x15, 2560              
+    madd x0, x15, x4, x0 	    
+    madd x0, x21, x3, x0     
+
+    ldr x30, [sp]
+    add sp, sp, #8
+    br x30
